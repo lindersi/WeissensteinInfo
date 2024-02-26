@@ -97,9 +97,9 @@ for abrufversuche in range(10):  # Anzahl Versuche im Fehlerfall
             element = WebDriverWait(driver, 5).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, 'div.header-navigation'))
             )
-            seilbahninfo = driver.find_element(By.CSS_SELECTOR, 'div.centered-wrapper-inner div h4').text.split('\n')
+            seilbahninfo = driver.find_elements(By.CSS_SELECTOR, 'div#article-293 div.centered-wrapper-inner p')
             for i in seilbahninfo:
-                info[f'seilbahn{seilbahninfo.index(i)}'] = i
+                info[f'seilbahn{seilbahninfo.index(i)}'] = i.text
 
         except:
             print(f'Fehler beim Abruf der Seilbahn-Informationen (Versuch {abrufversuche}): ', sys.exc_info())
