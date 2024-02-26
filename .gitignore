@@ -1,6 +1,7 @@
 # Eigene
 unit-file/
 secrets.py
+chromedriver.exe
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -131,5 +132,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-chromedriver.exe
 .idea/vcs.xml
