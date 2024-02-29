@@ -18,6 +18,7 @@ logfile = "weissenstein-info.log"  # "" = disabled
 
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " \
              "Chrome/96.0.4664.45 Safari/537.36"
+
 options = webdriver.ChromeOptions()
 options.add_argument('--no-sandbox')
 options.add_argument('--headless')
@@ -109,11 +110,10 @@ for abrufversuche in range(10):  # Anzahl Versuche im Fehlerfall
 
         try:
             # Hinterweissenstein Strassensperre
-            driver.get('https://www.welschenrohr.ch/neuigkeiten/verkehrsinfo-bergstrassenoev/')
+            driver.get('https://www.sennhaus.ch/')
             time.sleep(0)
-            strasseninfo = driver.find_elements(By.CSS_SELECTOR, '.plf-text-wrapper .contenttable~.contenttable tr')
-            for i in strasseninfo:
-                info[f'strasse{strasseninfo.index(i)}'] = i.text
+            strasseninfo = driver.find_element(By.CSS_SELECTOR, 'img[src*="/info/WeissensteinpassInfo/"]')
+            info["strasse1"] = strasseninfo.get_attribute("alt")
 
         except:
             print(f'Fehler beim Abruf der Strassen-Informationen (Versuch {abrufversuche}): ', sys.exc_info())
