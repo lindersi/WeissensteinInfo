@@ -80,6 +80,23 @@ for abrufversuche in range(10):  # Anzahl Versuche im Fehlerfall
 
     info = {}
 
+    def replace_newline_with_colon(text):
+        # Teile den Text an den Zeilenumbrüchen auf
+        lines = text.splitlines()
+        # Erstelle eine neue Liste für die modifizierten Zeilen
+        result = []
+        # Iteriere durch jede Zeile, außer die letzte (da sie keinen Zeilenumbruch hat)
+        for i in range(len(lines) - 1):
+            # Falls die aktuelle Zeile nicht mit ':' endet, füge einen hinzu
+            if not lines[i].endswith(':'):
+                result.append(lines[i] + ':')
+            else:
+                result.append(lines[i])
+        # Füge die letzte Zeile hinzu, ohne Veränderung (weil danach kein Zeilenumbruch mehr kommt)
+        result.append(lines[-1])
+        # Füge die Zeilen wieder mit Leerzeichen zusammen
+        return ' '.join(result)
+
     x = 0
     while control['onoff'] != "stop":  # Endlosschleife mit "while True" oder begrenzt mit "while x in range(n)>" oder gesteuert mit "while control['onoff'] != "stop""
         if x > 0:
@@ -96,11 +113,11 @@ for abrufversuche in range(10):  # Anzahl Versuche im Fehlerfall
             # Seilbahn Weissenstein
             driver.get('https://seilbahn-weissenstein.ch/')
             element = WebDriverWait(driver, 5).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, 'div.header-navigation'))
+                EC.presence_of_element_located((By.CSS_SELECTOR, 'p.tageseintrag'))
             )
-            seilbahninfo = driver.find_elements(By.CSS_SELECTOR, 'div#article-293 div.centered-wrapper-inner p')
+            seilbahninfo = driver.find_elements(By.CSS_SELECTOR, 'p.tageseintrag ~ div p')
             for i in seilbahninfo:
-                info[f'seilbahn{seilbahninfo.index(i)}'] = i.text
+                info[f'seilbahn{seilbahninfo.index(i)}'] = replace_newline_with_colon(i.text)
 
         except:
             print(f'Fehler beim Abruf der Seilbahn-Informationen (Versuch {abrufversuche}): ', sys.exc_info())
@@ -109,11 +126,14 @@ for abrufversuche in range(10):  # Anzahl Versuche im Fehlerfall
                                payload=f'Fehler beim Abruf der Seilbahn-Infos (Versuch {abrufversuche}): {sys.exc_info()}')
 
         try:
-            # Hinterweissenstein Strassensperre
-            driver.get('https://www.sennhaus.ch/')
-            time.sleep(0)
-            strasseninfo = driver.find_element(By.CSS_SELECTOR, 'img[src*="/info/WeissensteinpassInfo/"]')
-            info["strasse1"] = strasseninfo.get_attribute("alt")
+            # Gemeinde Welschenrohr Strassensperre
+            driver.get('https://www.welschenrohr.ch/ueses-dorf/aktuelles/verkehrsinfo.html/48')
+            element = WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, 'div.verkehrsinfo'))
+            )
+            strasseninfo = driver.find_elements(By.CSS_SELECTOR, 'div.verkehrsinfo p')
+            for i in strasseninfo:
+                info[f'strasse{strasseninfo.index(i)}'] = replace_newline_with_colon(i.text)
 
         except:
             print(f'Fehler beim Abruf der Strassen-Informationen (Versuch {abrufversuche}): ', sys.exc_info())
