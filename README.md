@@ -1,3 +1,5 @@
+12.12.2024: Abgelöst durch die Docker-Version "python-weissensteininfo"
+
 # Weissenstein-Info
 
 Ruft diverse Infos rund um den Weisstenstein aus dem Web ab:
